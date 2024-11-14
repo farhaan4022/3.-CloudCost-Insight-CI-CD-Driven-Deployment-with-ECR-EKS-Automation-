@@ -3,43 +3,43 @@ pipeline {
     stages {
         stage('Build Docker Image') {
             steps {
-                // Add your build steps here
+                echo 'Placeholder step for Build Docker Image'
             }
         }
 
         stage('Push Docker Image to ECR') {
             steps {
-                // Add your push steps here
+                echo 'Placeholder step for Push Docker Image to ECR'
             }
         }
 
         stage('Initialize Terraform') {
             steps {
-                // Add your initialization steps here
+                echo 'Placeholder step for Initialize Terraform'
             }
         }
 
         stage('Plan Terraform Changes') {
             steps {
-                // Add your planning steps here
+                echo 'Placeholder step for Plan Terraform Changes'
             }
         }
 
         stage('Apply Terraform Configuration') {
             steps {
-                // Add your apply steps here
+                echo 'Placeholder step for Apply Terraform Configuration'
             }
         }
 
         stage('Update kubeconfig') {
             steps {
-                // Add your kubeconfig update steps here
+                echo 'Placeholder step for Update kubeconfig'
             }
         }
 
         stage('Deploy to Cluster') {
             steps {
-                // Add your deployment steps here
+                echo 'Placeholder step for Deploy to Cluster'
             }
         }
     }
