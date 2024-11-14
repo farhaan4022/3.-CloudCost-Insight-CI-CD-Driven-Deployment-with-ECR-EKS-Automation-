@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: flask-aws-cost-app-deployment
+  labels:
+    app: flask-aws-cost-app
+spec:
+  replicas: 3  # Number of pod replicas
+  selector:
+    matchLabels:
+      app: flask-aws-cost-app
+  template:
+    metadata:
+      labels:
+        app: flask-aws-cost-app
+    spec:
+      containers:
+        - name: flask-aws-cost-app
+          image: 021891574443.dkr.ecr.ap-south-1.amazonaws.com/aws-cost-flask-app:latest  # Your ECR image URL
+          ports:
+            - containerPort: 5000
+          env:
+            - name: FLASK_APP
+              value: "app.py"  # Specify your app if necessary
+      imagePullSecrets:
+        - name: ecr-secret  # Referencing the secret to authenticate with ECR
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: flask-aws-cost-app-service
+spec:
+  selector:
+    app: flask-aws-cost-app
+  ports:
+    - protocol: TCP
+      port: 80  # External port for public access
+      targetPort: 5000  # Container port
+  type: LoadBalancer  # Exposes the service externally

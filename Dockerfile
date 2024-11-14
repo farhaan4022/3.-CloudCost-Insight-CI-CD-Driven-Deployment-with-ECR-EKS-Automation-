@@ -1,21 +1,33 @@
-# Use an official Python runtime as a parent image
-FROM python:3.12-slim
+# Stage 1: Builder
+FROM python:3.12-slim AS builder
 
-# Set the working directory in the container
+# Set working directory
 WORKDIR /app
 
-# Copy the current directory contents into the container at /app
-COPY . /app
+# Copy the requirements file
+COPY requirements.txt .
 
-# Install any needed packages specified in requirements.txt
-RUN pip install --no-cache-dir -r requirements.txt
+# Install dependencies
+RUN pip install --upgrade pip && \
+    pip install --user -r requirements.txt
 
-# Make port 5000 available to the world outside this container
+# Stage 2: Final image
+FROM python:3.12-alpine
+
+# Set environment variables to avoid issues with permissions
+ENV PATH=/root/.local/bin:$PATH
+
+# Set working directory
+WORKDIR /app
+
+# Copy only the necessary libraries from the builder stage
+COPY --from=builder /root/.local /root/.local
+
+# Copy the application code
+COPY . .
+
+# Expose the app port
 EXPOSE 5000
 
-# Define environment variable to run the application
-ENV FLASK_APP=app.py
-ENV FLASK_RUN_HOST=0.0.0.0
-
-# Run Flask when the container starts
-CMD ["flask", "run"]
+# Start the Flask application
+CMD ["flask", "run", "--host=0.0.0.0", "--port=5000"]
