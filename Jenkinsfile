@@ -1,48 +1,45 @@
 pipeline {
     agent any
-    environment {
-        AWS_REGION = 'ap-south-1'
-        ECR_REGISTRY = '021891574443.dkr.ecr.ap-south-1.amazonaws.com'
-        ECR_REPOSITORY = 'aws-cost-flask-app'
-        IMAGE_TAG = "latest"
-    }
     stages {
         stage('Build Docker Image') {
             steps {
-                sh 'docker build --no-cache -t ${ECR_REPOSITORY}:${IMAGE_TAG} .'
+                // Add your build steps here
             }
         }
 
         stage('Push Docker Image to ECR') {
-            environment {
-                ECR_CREDENTIALS = credentials('ecr-credentials')
-            }
             steps {
-                script {
-                    sh '''
-                    echo ${ECR_CREDENTIALS_PSW} | docker login --username ${ECR_CREDENTIALS_USR} --password-stdin ${ECR_REGISTRY}
-                    docker tag ${ECR_REPOSITORY}:${IMAGE_TAG} ${ECR_REGISTRY}/${ECR_REPOSITORY}:${IMAGE_TAG}
-                    docker push ${ECR_REGISTRY}/${ECR_REPOSITORY}:${IMAGE_TAG}
-                    '''
-                }
+                // Add your push steps here
             }
         }
 
         stage('Initialize Terraform') {
             steps {
-                sh 'terraform init'
+                // Add your initialization steps here
             }
         }
 
         stage('Plan Terraform Changes') {
             steps {
-                sh 'terraform plan'
+                // Add your planning steps here
             }
         }
 
         stage('Apply Terraform Configuration') {
             steps {
-                sh 'terraform apply -auto-approve'
+                // Add your apply steps here
+            }
+        }
+
+        stage('Update kubeconfig') {
+            steps {
+                // Add your kubeconfig update steps here
+            }
+        }
+
+        stage('Deploy to Cluster') {
+            steps {
+                // Add your deployment steps here
             }
         }
     }
